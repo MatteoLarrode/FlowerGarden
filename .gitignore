@@ -1,3 +1,9 @@
+# Secrets
+.streamlit/secrets.toml
+
+# Generated output
+output/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
