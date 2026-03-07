@@ -72,13 +72,17 @@ sliders["co_r"] = make_slider([LEFT, row(10), WIDTH, 0.03], "Red",   0.0, 1.0, p
 sliders["co_g"] = make_slider([LEFT, row(11), WIDTH, 0.03], "Green", 0.0, 1.0, params.color_outer[1])
 sliders["co_b"] = make_slider([LEFT, row(12), WIDTH, 0.03], "Blue",  0.0, 1.0, params.color_outer[2])
 
-# ── Save button ───────────────────────────────────────────────────────────────
+# ── Buttons ───────────────────────────────────────────────────────────────────
 
-ax_btn = fig.add_axes([LEFT, row(13) - 0.01, WIDTH, 0.04])
-btn_save = Button(ax_btn, "Save PNG", color="#334433", hovercolor="#446644")
+ax_btn_redraw = fig.add_axes([LEFT,                row(13) - 0.01, WIDTH * 0.48, 0.04])
+ax_btn_save   = fig.add_axes([LEFT + WIDTH * 0.52, row(13) - 0.01, WIDTH * 0.48, 0.04])
+
+btn_redraw = Button(ax_btn_redraw, "Redraw",   color="#333355", hovercolor="#444466")
+btn_save   = Button(ax_btn_save,   "Save PNG", color="#334433", hovercolor="#446644")
+btn_redraw.label.set_color("#aaaaff")
 btn_save.label.set_color("#aaffaa")
 
-# ── Redraw callback ───────────────────────────────────────────────────────────
+# ── Callbacks ─────────────────────────────────────────────────────────────────
 
 def read_params() -> DahliaParams:
     return DahliaParams(
@@ -96,10 +100,6 @@ def update(_):
     fig.canvas.draw_idle()
 
 
-for s in sliders.values():
-    s.on_changed(update)
-
-
 def save(_):
     p = read_params()
     out = "output.png"
@@ -111,6 +111,7 @@ def save(_):
     print(f"Saved {out}")
 
 
+btn_redraw.on_clicked(update)
 btn_save.on_clicked(save)
 
 # ── Show ──────────────────────────────────────────────────────────────────────
