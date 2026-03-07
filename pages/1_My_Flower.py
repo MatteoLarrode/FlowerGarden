@@ -41,7 +41,7 @@ if clicked:
     fig = generate_flower(params)
 
     buf = io.BytesIO()
-    fig.savefig(buf, format="png", dpi=150, bbox_inches="tight")
+    fig.savefig(buf, format="png", dpi=150, bbox_inches="tight", transparent=True)
     image_bytes = buf.getvalue()
 
     # Store in session state so the Garden page can use it
