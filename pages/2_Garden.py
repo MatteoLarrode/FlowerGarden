@@ -14,6 +14,13 @@ GARDEN_H = 600
 
 st.set_page_config(page_title="The Garden", layout="wide")
 
+fr = st.toggle("🇫🇷 Français", value=False)
+
+if fr:
+    st.markdown("*Ce jardin est vide à l'heure où j'écris ça, voyons voir ce qu'il devient! Merci à Joe Larrodé pour cette magnifique illustration !*")
+else:
+    st.markdown("*This garden was empty at the time of writing, let's see what it becomes! Thanks Joe Larrodé for the wonderful drawing!*")
+
 # Remove header, zero padding, prevent scroll, fill viewport
 st.markdown("""
 <style>
@@ -60,14 +67,26 @@ planting_mode = has_flower and st.session_state.get("flower_name", "")
 
 with st.sidebar:
     if not has_flower:
-        st.info("Head to **My Flower** first to generate your flower, then come back here to plant it.")
+        if fr:
+            st.info("Va d'abord dans **My Flower** pour générer ta fleur, puis reviens ici pour la planter.")
+        else:
+            st.info("Head to **My Flower** first to generate your flower, then come back here to plant it.")
     elif planting_mode:
-        st.info(
-            f"Hi **{st.session_state['flower_name']}**! "
-            "Click anywhere in the garden to choose where to plant your flower."
-        )
+        if fr:
+            st.info(
+                f"Bonjour **{st.session_state['flower_name']}** ! "
+                "Clique n'importe où dans le jardin pour choisir où planter ta fleur."
+            )
+        else:
+            st.info(
+                f"Hi **{st.session_state['flower_name']}**! "
+                "Click anywhere in the garden to choose where to plant your flower."
+            )
     else:
-        st.caption("Hover over a flower to see who planted it.")
+        if fr:
+            st.caption("Passe la souris sur une fleur pour voir qui l'a plantée.")
+        else:
+            st.caption("Hover over a flower to see who planted it.")
 
 # ── Garden image ───────────────────────────────────────────────────────────────
 
