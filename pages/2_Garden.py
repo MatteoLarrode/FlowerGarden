@@ -1,23 +1,13 @@
 import base64 as _b64
 import io as _io
-from pathlib import Path
 
 import plotly.graph_objects as go
 import streamlit as st
 from PIL import Image
 from streamlit_image_coordinates import streamlit_image_coordinates
 
-import streamlit.components.v1 as _components
-
 from garden.storage import get_all_flowers, plant_flower
 from garden.render import composite_garden, LILY_THUMBNAIL, SMALL_THUMBNAIL
-
-# ── Trowel cursor ──────────────────────────────────────────────────────────────
-_ASSETS = Path(__file__).parent.parent / "assets"
-_trowel = Image.open(_ASSETS / "trowel.png").convert("RGBA").resize((40, 40), Image.LANCZOS)
-_tbuf = _io.BytesIO()
-_trowel.save(_tbuf, format="PNG")
-_trowel_b64 = _b64.b64encode(_tbuf.getvalue()).decode()
 
 GARDEN_W = 900
 GARDEN_H = 600
@@ -25,54 +15,30 @@ GARDEN_H = 600
 st.set_page_config(page_title="The Garden", layout="wide")
 
 # Remove header, zero padding, prevent scroll, fill viewport
-st.markdown(f"""
+st.markdown("""
 <style>
-[data-testid="stHeader"] {{ display: none; }}
+[data-testid="stHeader"] { display: none; }
 [data-testid="stAppViewBlockContainer"],
-.main .block-container {{
+.main .block-container {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
     max-width: 100% !important;
-}}
-html, body, [data-testid="stAppViewContainer"], .main {{
+}
+html, body, [data-testid="stAppViewContainer"], .main {
     overflow: hidden !important;
     height: 100vh !important;
-}}
-[data-testid="stPlotlyChart"] {{
+}
+[data-testid="stPlotlyChart"] {
     height: calc(100vh - 0.5rem) !important;
-    cursor: url("data:image/png;base64,{_trowel_b64}") 10 36, crosshair !important;
-}}
+}
 [data-testid="stPlotlyChart"] > div,
-[data-testid="stPlotlyChart"] iframe {{
+[data-testid="stPlotlyChart"] iframe {
     height: 100% !important;
-}}
+}
 </style>
 """, unsafe_allow_html=True)
-
-# Inject trowel cursor into the Plotly iframe (outer CSS doesn't reach inside the iframe)
-_components.html(f"""
-<script>
-function injectCursor() {{
-  try {{
-    var frames = window.parent.document.querySelectorAll('[data-testid="stPlotlyChart"] iframe');
-    frames.forEach(function(iframe) {{
-      try {{
-        var doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (doc && doc.head && !doc.getElementById('trowel-cursor')) {{
-          var s = doc.createElement('style');
-          s.id = 'trowel-cursor';
-          s.textContent = '* {{ cursor: url("data:image/png;base64,{_trowel_b64}") 10 36, crosshair !important; }}';
-          doc.head.appendChild(s);
-        }}
-      }} catch(e) {{}}
-    }});
-  }} catch(e) {{}}
-}}
-[300, 800, 1500, 3000].forEach(function(d) {{ setTimeout(injectCursor, d); }});
-</script>
-""", height=0)
 
 # ── Load flowers ──────────────────────────────────────────────────────────────
 
