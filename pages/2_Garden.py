@@ -66,7 +66,12 @@ planting_mode = has_flower and st.session_state.get("flower_name", "")
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 
 with st.sidebar:
-    if not has_flower:
+    if st.session_state.get("just_planted"):
+        if fr:
+            st.success("Merci infiniment pour ta contribution au jardin ! 🌸 Bonne Journée Internationale des Femmes")
+        else:
+            st.success("Thank you so much for contributing to the garden! 🌸 Happy International Women's Day")
+    elif not has_flower:
         if fr:
             st.info("Va d'abord dans **My Flower** pour générer ta fleur, puis reviens ici pour la planter.")
         else:
@@ -102,6 +107,7 @@ if planting_mode:
             image_b64=st.session_state["flower_b64"],
         )
         del st.session_state["flower_b64"]
+        st.session_state["just_planted"] = True
         st.rerun()
 
 else:
